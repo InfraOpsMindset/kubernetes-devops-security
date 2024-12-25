@@ -18,6 +18,15 @@ spec:
       containers:
       - image: replace
         name: devsecops-container
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+
 ---
 apiVersion: v1
 kind: Service
