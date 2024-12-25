@@ -28,5 +28,14 @@ pipeline {
             }
           }
         }
+
+        stage('Kubernetes Deployment - DEV') {
+          steps {
+            withKubeConfig([credentialsId: 'kubeconfig']) {
+              sh "sed -i 's#replace#enes789/devsecops-numeric-app:${BUILD_NUMBER}#g' k8s_deployment_service.yaml"
+              sh "kubectl apply -f k8s_deployment_service.yaml"
+            }
+          }
+        }
     }
 }
