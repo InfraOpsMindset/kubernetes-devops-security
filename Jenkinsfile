@@ -2,12 +2,14 @@ pipeline {
   agent any
 
   stages {
+    
       stage('Build Artifact') {
             steps {
               sh "mvn clean package -DskipTests=true" // trigger jenkins
               archive 'target/*.jar' //so that they can be downloaded later
             }
         }  
+
         stage('Unit Tests') {
             steps {
               sh "mvn test"
@@ -19,6 +21,18 @@ pipeline {
               }
             }
         }
+
+        stage('Mutation Tests - PIT') {
+          steps {
+            sh "mvn org.pitest:pitest-maven:mutationCoverage"
+          }
+          post {
+            always {
+              pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+            }
+          }
+        }
+
         stage('Docker Build and Push') {
           steps {
             withDockerRegistry([credentialsId: "docker-hub", url: ""]) {
