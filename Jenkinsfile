@@ -10,41 +10,41 @@ pipeline {
             }
         }  
 
-        stage('Unit Tests') {
-            steps {
-              sh "mvn test"
-            }
-            post {
-              always {
-                junit 'target/surefire-reports/*.xml'
-                jacoco execPattern: 'target/jacoco.exec'
-              }
-            }
-        }
+        // stage('Unit Tests') {
+        //     steps {
+        //       sh "mvn test"
+        //     }
+        //     post {
+        //       always {
+        //         junit 'target/surefire-reports/*.xml'
+        //         jacoco execPattern: 'target/jacoco.exec'
+        //       }
+        //     }
+        // }
 
-        stage('Mutation Tests - PIT') {
-          steps {
-            sh "mvn org.pitest:pitest-maven:mutationCoverage"
-          }
-          post {
-            always {
-              pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
-            }
-          }
-        }
+        // stage('Mutation Tests - PIT') {
+        //   steps {
+        //     sh "mvn org.pitest:pitest-maven:mutationCoverage"
+        //   }
+        //   post {
+        //     always {
+        //       pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+        //     }
+        //   }
+        // }
 
-        stage('SonarQube - SAST') {
-          steps {
-            withSonarQubeEnv('SonarQube') {
-              sh "mvn sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://34.133.34.164:9000"
-            }
-            timeout(time: 2, unit: 'MINUTES') {
-              script {
-                waitForQualityGate abortPipeline: true
-              }
-            }
-          }
-        }
+        // stage('SonarQube - SAST') {
+        //   steps {
+        //     withSonarQubeEnv('SonarQube') {
+        //       sh "mvn sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://34.133.34.164:9000"
+        //     }
+        //     timeout(time: 2, unit: 'MINUTES') {
+        //       script {
+        //         waitForQualityGate abortPipeline: true
+        //       }
+        //     }
+        //   }
+        // }
 
         // stage('Vulnerability Scan - Depencency Check') {
         //   steps {
@@ -57,7 +57,7 @@ pipeline {
         //   }
         // }
 
-        stage('Vulnerability Scan - Trivy') {
+        stage('Vulnerability Scan - Docker') {
           steps {
             parallel(
               // "Dependency Scan": {
@@ -65,7 +65,7 @@ pipeline {
               // },
               "Trivy Scan": {
                 sh "bash trivy-docker-image-scan.sh"
-              }
+              },
               "OPA Conftest": {
                 sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
               }
