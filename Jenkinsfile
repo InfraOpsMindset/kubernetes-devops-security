@@ -74,7 +74,7 @@ pipeline {
           steps {
             withDockerRegistry([credentialsId: "docker-hub", url: ""]) {
               sh 'printenv'
-              sh 'docker build -t enes789/devsecops-numeric-app:${BUILD_NUMBER} .'
+              sh 'sudo docker build -t enes789/devsecops-numeric-app:${BUILD_NUMBER} .'
               sh 'docker push enes789/devsecops-numeric-app:${BUILD_NUMBER}'
             }
           }
