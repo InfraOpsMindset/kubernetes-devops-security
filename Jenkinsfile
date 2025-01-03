@@ -1,6 +1,15 @@
 pipeline {
   agent any
 
+  environment {
+    deploymentName = "devsecops"
+    containerName = "devsecops-container"
+    serviceName = "devsecops-svc"
+    imageName = "enes789/devsecops-numeric-app:${BUILD_NUMBER}"
+    applicationURL = "http://34.133.34.164"
+    applicationURI = "/increment/99"
+  }
+
   stages {
 
       stage('Build Artifact') {
@@ -89,13 +98,31 @@ pipeline {
           }
         }
 
-        stage('Kubernetes Deployment - DEV') {
+        // stage('Kubernetes Deployment - DEV') {
+        //   steps {
+        //     withKubeConfig([credentialsId: 'kubeconfig']) {
+        //       sh "sed -i 's#replace#enes789/devsecops-numeric-app:${BUILD_NUMBER}#g' k8s_deployment_service.yaml"
+        //       sh "kubectl apply -f k8s_deployment_service.yaml"
+        //     }
+        //   }
+        // }
+
+        stage('K8S Deployment - DEV') {
           steps {
-            withKubeConfig([credentialsId: 'kubeconfig']) {
-              sh "sed -i 's#replace#enes789/devsecops-numeric-app:${BUILD_NUMBER}#g' k8s_deployment_service.yaml"
-              sh "kubectl apply -f k8s_deployment_service.yaml"
-            }
+            parallel(
+              "Deployment": {
+                withKubeConfig([credentialsId: 'kubeconfig']) {
+                  sh "bash k8s-deployment.sh"
+                }
+              },
+              "Rollout Status": {
+                withKubeConfig([credentialsId: 'kubeconfig']) {
+                  sh "bash k8s-deployment-rollout-status.sh"
+                }
+              }
+            )
           }
         }
+
     }
 }
