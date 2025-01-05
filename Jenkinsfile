@@ -6,7 +6,7 @@ pipeline {
     containerName = "devsecops-container"
     serviceName = "devsecops-svc"
     imageName = "enes789/devsecops-numeric-app:${BUILD_NUMBER}"
-    applicationURL = "http://34.133.34.164"
+    applicationURL = "http://34.8.142.168"
     applicationURI = "/increment/99"
   }
 
