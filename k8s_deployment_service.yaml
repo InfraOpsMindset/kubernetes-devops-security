@@ -4,9 +4,6 @@ metadata:
   labels:
     app: devsecops
   name: devsecops
-  annotations:
-    container.apparmor.security.beta.kubernetes.io/devsecops-container: runtime/default
-    container.seccomp.security.alpha.kubernetes.io/pod: runtime/default
 spec:
   replicas: 2
   selector:
@@ -18,11 +15,10 @@ spec:
       labels:
         app: devsecops
     spec:
-      automountServiceAccountToken: false
-      serviceAccountName: default
       volumes:
         - name: vol
           emptyDir: {}
+      serviceAccountName: default
       containers:
       - image: replace
         name: devsecops-container
@@ -32,10 +28,9 @@ spec:
         securityContext:
           capabilities:
             drop:
-              - ALL
+              - NET_RAW
           runAsNonRoot: true
-          runAsUser: 10001
-          runAsGroup: 10001
+          runAsUser: 100
           readOnlyRootFilesystem: true
         resources:
           requests:
