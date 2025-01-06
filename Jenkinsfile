@@ -1,3 +1,5 @@
+@Library('slack') _
+
 pipeline {
   agent any
 
@@ -164,6 +166,7 @@ pipeline {
     post {
       always {
         publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap_report.html', reportName: 'OWASP ZAP HTML Report', reportTitles: 'OWASP ZAP HTML Report'])
+        sendNotification currentBuild.result
       }
 
       // success {
