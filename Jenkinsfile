@@ -14,6 +14,12 @@ pipeline {
 
   stages {
 
+      stage('Testing Slack') {
+        steps {
+          sh 'exit 1'
+        }
+      }
+
       stage('Build Artifact') {
             steps {
               sh "mvn clean package -DskipTests=true" // trigger jenkins
@@ -153,13 +159,13 @@ pipeline {
           }
         }
 
-        stage('OWASP ZAP - DAST') {
-          steps {
-            withKubeConfig([credentialsId: 'kubeconfig']) {
-              sh 'bash zap.sh'
-            }
-          }
-        }
+        // stage('OWASP ZAP - DAST') {
+        //   steps {
+        //     withKubeConfig([credentialsId: 'kubeconfig']) {
+        //       sh 'bash zap.sh'
+        //     }
+        //   }
+        // }
 
     }
 
