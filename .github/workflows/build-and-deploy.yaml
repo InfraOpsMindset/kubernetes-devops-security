@@ -14,15 +14,16 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up JDK 8
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v4
       with:
-        java-version: '8'
+        distribution: 'orocale'
+        java-version: '17'
 
     - name: Cache Maven packages
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -33,7 +34,7 @@ jobs:
       run: mvn clean package -DskipTests=true
     
     - name: Archive Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Jar-Files
         path: target/*.jar
@@ -44,15 +45,16 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       
     - name: Set up JDK 8
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v4
       with:
-        java-version: '8'
+        distribution: 'orocale'
+        java-version: '17'
 
     - name: Cache Maven packages
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -63,13 +65,13 @@ jobs:
       run: mvn test
 
     - name: Publish Test Results
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Test-Results
         path: target/surefire-reports/*.xml
 
     - name: Publish JaCoCo Report
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: JaCoCo-Report
         path: target/jacoco.exec
@@ -80,15 +82,16 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up JDK 8
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v4
       with:
-        java-version: '8'
+        distribution: 'orocale'
+        java-version: '17'
 
     - name: Cache Maven packages
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
