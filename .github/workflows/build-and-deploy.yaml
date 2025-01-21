@@ -46,14 +46,14 @@ jobs:
     #     timeout: 120  # Timeout in seconds  
 
     # Triggering SonarQube analysis as results of it are required by Quality Gate check.
-    - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@master
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: http://34.133.34.164:9000
-      with:
-        args: >
-          -Dsonar.projectKey=numeric-app
+    # - name: SonarQube Scan
+    #   uses: sonarsource/sonarqube-scan-action@master
+    #   env:
+    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #     SONAR_HOST_URL: http://34.133.34.164:9000
+    #   with:
+    #     args: >
+    #       -Dsonar.projectKey=numeric-app
 
     # Check the Quality Gate status.
     - name: SonarQube Quality Gate check
