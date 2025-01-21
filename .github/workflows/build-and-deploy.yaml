@@ -33,10 +33,10 @@ jobs:
     - name: Build Artifact
       run: mvn clean package -DskipTests=true
 
-    # - name: Run SonarQube Analysis
-    #   env:
-    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Securely stored SonarQube token
-    #   run: mvn sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://34.133.34.164:9000
+    - name: Run SonarQube Analysis
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Securely stored SonarQube token
+      run: mvn sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://34.133.34.164:9000
 
     # - name: Wait for SonarQube Quality Gate
     #   uses: sonarsource/sonarcloud-github-action@v1.4
