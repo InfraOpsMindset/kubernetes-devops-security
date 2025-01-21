@@ -38,6 +38,27 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Securely stored SonarQube token
       run: mvn sonar:sonar -Dsonar.projectKey=numeric-app -Dsonar.host.url=http://34.133.34.164:9000
 
+    - name: SonarQube Quality Gate check
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: http://34.133.34.164:9000
+      run: |
+        # Assuming SONAR_HOST_URL and SONAR_TOKEN are set as environment variables
+        PROJECT_KEY="numeric-app"
+        
+        # Fetch the quality gate status
+        QUALITY_GATE_STATUS=$(curl -s -u "$SONAR_TOKEN": "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$PROJECT_KEY" | jq -r .projectStatus.status)
+        
+        echo "Quality Gate Status: $QUALITY_GATE_STATUS"
+        
+        # Check if the quality gate failed
+        if [ "$QUALITY_GATE_STATUS" != "OK" ]; then
+          echo "Quality gate failed!"
+          exit 1  # Exit with error
+        fi
+        
+
+
     # - name: Wait for SonarQube Quality Gate
     #   uses: sonarsource/sonarcloud-github-action@v1.4
     #   env:
@@ -56,17 +77,17 @@ jobs:
     #       -Dsonar.projectKey=numeric-app
 
     # Check the Quality Gate status.
-    - name: SonarQube Quality Gate check
-      id: sonarqube-quality-gate-check
-      uses: sonarsource/sonarqube-quality-gate-action@master
-      with:
-        pollingTimeoutSec: 600
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: http://34.133.34.164:9000 
+    # - name: SonarQube Quality Gate check
+    #   id: sonarqube-quality-gate-check
+    #   uses: sonarsource/sonarqube-quality-gate-action@master
+    #   with:
+    #     pollingTimeoutSec: 600
+    #   env:
+    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #     SONAR_HOST_URL: http://34.133.34.164:9000 
         
-    - name: "Example show SonarQube Quality Gate Status value"
-      run: echo "The Quality Gate status is ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}"    
+    # - name: "Example show SonarQube Quality Gate Status value"
+    #   run: echo "The Quality Gate status is ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}"    
     
     # - name: Archive Artifacts
     #   uses: actions/upload-artifact@v4
